@@ -72,6 +72,8 @@ bool ExternalTextureGL::PopulateTextureWithIdentifier(
   }
   if (!tbm_surface_internal_is_valid(texture_tbm_surface_)) {
     LoggerE("tbm_surface not valid");
+    tbm_surface_internal_unref(texture_tbm_surface_);
+    texture_tbm_surface_ = NULL;
     mutex_.unlock();
     return false;
   }
