@@ -32,10 +32,7 @@ ExternalTextureGL::~ExternalTextureGL() {
     glDeleteTextures(1, &state_->gl_texture);
   }
   state_.release();
-  if (texture_tbm_surface_) {
-    tbm_surface_internal_unref(texture_tbm_surface_);
-    texture_tbm_surface_ = NULL;
-  }
+  DestructionTbmSurface();
   mutex_.unlock();
 }
 
@@ -47,12 +44,12 @@ bool ExternalTextureGL::OnFrameAvailable(tbm_surface_h tbm_surface) {
     return false;
   }
   if (texture_tbm_surface_) {
-    LoggerE("texture_tbm_surface_ does not destruction, discard");
+    LoggerD("texture_tbm_surface_ does not destruction, discard");
     mutex_.unlock();
     return false;
   }
   if (!tbm_surface_internal_is_valid(tbm_surface)) {
-    LoggerE("tbm_surface not valid, pass");
+    LoggerD("tbm_surface not valid, pass");
     mutex_.unlock();
     return false;
   }
@@ -66,14 +63,13 @@ bool ExternalTextureGL::PopulateTextureWithIdentifier(
     size_t width, size_t height, FlutterOpenGLTexture* opengl_texture) {
   mutex_.lock();
   if (!texture_tbm_surface_) {
-    LoggerE("texture_tbm_surface_ is NULL");
+    LoggerD("texture_tbm_surface_ is NULL");
     mutex_.unlock();
     return false;
   }
   if (!tbm_surface_internal_is_valid(texture_tbm_surface_)) {
-    LoggerE("tbm_surface not valid");
-    tbm_surface_internal_unref(texture_tbm_surface_);
-    texture_tbm_surface_ = NULL;
+    LoggerD("tbm_surface not valid");
+    DestructionTbmSurface();
     mutex_.unlock();
     return false;
   }

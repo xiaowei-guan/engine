@@ -46,7 +46,7 @@ class ExternalTextureGL {
 
  private:
   std::unique_ptr<ExternalTextureGLState> state_;
-  std::mutex mutex_;
+  std::recursive_mutex mutex_;
   tbm_surface_h texture_tbm_surface_;
   static void destructionCallback(void* user_data);
   const long texture_id_;
