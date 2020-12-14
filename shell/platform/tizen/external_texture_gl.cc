@@ -120,20 +120,23 @@ bool ExternalTextureGL::PopulateTextureWithIdentifier(
   return true;
 }
 
-void ExternalTextureGL::DestructionTbmSurface() {
+void ExternalTextureGL::DestructionTbmSurfaceWithLock() {
   mutex_.lock();
+  DestructionTbmSurface();
+  mutex_.unlock();
+}
+
+void ExternalTextureGL::DestructionTbmSurface() {
   if (!texture_tbm_surface_) {
     LoggerE("tbm_surface_h is NULL");
-    mutex_.unlock();
     return;
   }
   tbm_surface_internal_unref(texture_tbm_surface_);
   texture_tbm_surface_ = NULL;
-  mutex_.unlock();
 }
 
 void ExternalTextureGL::destructionCallback(void* user_data) {
   ExternalTextureGL* externalTextureGL =
       reinterpret_cast<ExternalTextureGL*>(user_data);
-  externalTextureGL->DestructionTbmSurface();
+  externalTextureGL->DestructionTbmSurfaceWithLock();
 }
