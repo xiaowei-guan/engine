@@ -30,23 +30,24 @@ source_set("flutter_tizen_headers") {
 
 source_set("flutter_tizen") {
   sources = [
-    "channels/key_event_channel.cc",
+    #"channels/key_event_channel.cc",
     "channels/lifecycle_channel.cc",
     "channels/localization_channel.cc",
     "channels/navigation_channel.cc",
     "channels/platform_channel.cc",
     "channels/platform_view_channel.cc",
     "channels/settings_channel.cc",
-    "channels/text_input_channel.cc",
+    #"channels/text_input_channel.cc",
     "external_texture_gl.cc",
     "flutter_tizen.cc",
-    "key_event_handler.cc",
+    #"key_event_handler.cc",
     "tizen_embedder_engine.cc",
     "tizen_event_loop.cc",
     "tizen_surface.cc",
-    "tizen_surface_gl.cc",
+    #"tizen_surface_gl.cc",
+    "tizen_surface_gl_ecore_wl.cc",
     "tizen_vsync_waiter.cc",
-    "touch_event_handler.cc",
+    #"touch_event_handler.cc",
   ]
 
   configs +=
@@ -71,6 +72,7 @@ source_set("flutter_tizen") {
     "//third_party/tizen_tools/sysroot/$target_cpu/usr/include/ecore-imf-1",
     "//third_party/tizen_tools/sysroot/$target_cpu/usr/include/ecore-imf-evas-1",
     "//third_party/tizen_tools/sysroot/$target_cpu/usr/include/ecore-input-1",
+    "//third_party/tizen_tools/sysroot/$target_cpu/usr/include/ecore-wayland-1",
     "//third_party/tizen_tools/sysroot/$target_cpu/usr/include/ecore-wl2-1",
     "//third_party/tizen_tools/sysroot/$target_cpu/usr/include/efl-1",
     "//third_party/tizen_tools/sysroot/$target_cpu/usr/include/eina-1",
@@ -79,6 +81,7 @@ source_set("flutter_tizen") {
     "//third_party/tizen_tools/sysroot/$target_cpu/usr/include/eo-1",
     "//third_party/tizen_tools/sysroot/$target_cpu/usr/include/evas-1",
     "//third_party/tizen_tools/sysroot/$target_cpu/usr/include/system",
+    "//third_party/tizen_tools/sysroot/$target_cpu/usr/include/wayland-extension",
   ]
   
   lib_dirs = [ "//third_party/tizen_tools/sysroot/$target_cpu/usr/lib" ]
@@ -97,13 +100,15 @@ source_set("flutter_tizen") {
     "ecore",
     "ecore_imf",
     "ecore_input",
-    "ecore_wl2",
+    #"ecore_wl2",
+    "ecore_wayland",
     "EGL",
     "evas",
     "GLESv2",
     "tbm",
     "tdm-client",
     "wayland-client",
+    "wayland-egl",
   ]
 }
 

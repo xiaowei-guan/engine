@@ -10,23 +10,28 @@
 
 #include "flutter/shell/platform/common/cpp/client_wrapper/include/flutter/plugin_registrar.h"
 #include "flutter/shell/platform/common/cpp/incoming_message_dispatcher.h"
-#include "flutter/shell/platform/tizen/channels/key_event_channel.h"
+//#include "flutter/shell/platform/tizen/channels/key_event_channel.h"
 #include "flutter/shell/platform/tizen/channels/lifecycle_channel.h"
 #include "flutter/shell/platform/tizen/channels/localization_channel.h"
 #include "flutter/shell/platform/tizen/channels/navigation_channel.h"
 #include "flutter/shell/platform/tizen/channels/platform_channel.h"
 #include "flutter/shell/platform/tizen/channels/platform_view_channel.h"
 #include "flutter/shell/platform/tizen/channels/settings_channel.h"
-#include "flutter/shell/platform/tizen/channels/text_input_channel.h"
+//#include "flutter/shell/platform/tizen/channels/text_input_channel.h"
 #include "flutter/shell/platform/tizen/external_texture_gl.h"
-#include "flutter/shell/platform/tizen/key_event_handler.h"
+//#include "flutter/shell/platform/tizen/key_event_handler.h"
 #include "flutter/shell/platform/tizen/public/flutter_texture_registrar.h"
 #include "flutter/shell/platform/tizen/public/flutter_tizen.h"
 #include "flutter/shell/platform/tizen/tizen_event_loop.h"
 #include "flutter/shell/platform/tizen/tizen_surface.h"
-#include "flutter/shell/platform/tizen/tizen_surface_gl.h"
+//#include "flutter/shell/platform/tizen/tizen_surface_gl.h"
+#include "flutter/shell/platform/tizen/tizen_surface_gl_ecore_wl.h"
 #include "flutter/shell/platform/tizen/tizen_vsync_waiter.h"
-#include "flutter/shell/platform/tizen/touch_event_handler.h"
+//#include "flutter/shell/platform/tizen/touch_event_handler.h"
+
+
+class TizenEmbedderEngine;
+
 
 // State associated with the plugin registrar.
 struct FlutterDesktopPluginRegistrar {
@@ -97,13 +102,13 @@ class TizenEmbedderEngine {
   std::unique_ptr<TizenSurface> tizen_surface;
 
   // The system channels for communicating between Flutter and the platform.
-  std::unique_ptr<KeyEventChannel> key_event_channel;
+  //std::unique_ptr<KeyEventChannel> key_event_channel;
   std::unique_ptr<LifecycleChannel> lifecycle_channel;
   std::unique_ptr<LocalizationChannel> localization_channel;
   std::unique_ptr<NavigationChannel> navigation_channel;
   std::unique_ptr<PlatformChannel> platform_channel;
   std::unique_ptr<SettingsChannel> settings_channel;
-  std::unique_ptr<TextInputChannel> text_input_channel;
+  //std::unique_ptr<TextInputChannel> text_input_channel;
   std::unique_ptr<PlatformViewChannel> platform_view_channel;
 
   const std::string device_profile;
@@ -128,8 +133,8 @@ class TizenEmbedderEngine {
                                        FlutterOpenGLTexture* texture);
 
   // The handlers listening to platform events.
-  std::unique_ptr<KeyEventHandler> key_event_handler_;
-  std::unique_ptr<TouchEventHandler> touch_event_handler_;
+ // std::unique_ptr<KeyEventHandler> key_event_handler_;
+ // std::unique_ptr<TouchEventHandler> touch_event_handler_;
 
   // The plugin registrar handle given to API clients.
   std::unique_ptr<FlutterDesktopPluginRegistrar> plugin_registrar_;

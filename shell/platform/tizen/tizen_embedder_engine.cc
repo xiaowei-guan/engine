@@ -35,7 +35,7 @@ static double GetDeviceDpi() {
 TizenEmbedderEngine::TizenEmbedderEngine(
     const FlutterWindowProperties& window_properties)
     : device_profile(GetDeviceProfile()), device_dpi(GetDeviceDpi()) {
-  tizen_surface = std::make_unique<TizenSurfaceGL>(
+  tizen_surface = std::make_unique<TizenSurfaceGLEcoreWl>(
       window_properties.x, window_properties.y, window_properties.width,
       window_properties.height);
 
@@ -171,24 +171,24 @@ bool TizenEmbedderEngine::RunEngine(
   internal_plugin_registrar_ =
       std::make_unique<flutter::PluginRegistrar>(plugin_registrar_.get());
 
-  key_event_channel = std::make_unique<KeyEventChannel>(
-      internal_plugin_registrar_->messenger());
+  //key_event_channel = std::make_unique<KeyEventChannel>(
+  //    internal_plugin_registrar_->messenger());
   navigation_channel = std::make_unique<NavigationChannel>(
       internal_plugin_registrar_->messenger());
   platform_channel = std::make_unique<PlatformChannel>(
       internal_plugin_registrar_->messenger());
   settings_channel = std::make_unique<SettingsChannel>(
       internal_plugin_registrar_->messenger());
-  text_input_channel = std::make_unique<TextInputChannel>(
-      internal_plugin_registrar_->messenger(), this);
+  //text_input_channel = std::make_unique<TextInputChannel>(
+  //    internal_plugin_registrar_->messenger(), this);
   localization_channel = std::make_unique<LocalizationChannel>(flutter_engine);
   localization_channel->SendLocales();
   lifecycle_channel = std::make_unique<LifecycleChannel>(flutter_engine);
   platform_view_channel = std::make_unique<PlatformViewChannel>(
       internal_plugin_registrar_->messenger());
 
-  key_event_handler_ = std::make_unique<KeyEventHandler>(this);
-  touch_event_handler_ = std::make_unique<TouchEventHandler>(this);
+  //key_event_handler_ = std::make_unique<KeyEventHandler>(this);
+  //touch_event_handler_ = std::make_unique<TouchEventHandler>(this);
 
   SetWindowOrientation(0);
 
@@ -265,9 +265,9 @@ void TizenEmbedderEngine::SetWindowOrientation(int32_t degree) {
   double width = tizen_surface->GetWidth();
   double height = tizen_surface->GetHeight();
 
-  if (text_input_channel->isSoftwareKeyboardShowing()) {
-    height -= text_input_channel->GetCurrentKeyboardGeometry().h;
-  }
+  //if (text_input_channel->isSoftwareKeyboardShowing()) {
+  //  height -= text_input_channel->GetCurrentKeyboardGeometry().h;
+  //}
 
   double trans_x = 0.0, trans_y = 0.0;
   if (degree == 90) {
@@ -283,8 +283,8 @@ void TizenEmbedderEngine::SetWindowOrientation(int32_t degree) {
       sin(rad), cos(rad),  trans_y,  // y
       0.0,      0.0,       1.0       // perspective
   };
-  touch_event_handler_->rotation = degree;
-  text_input_channel->rotation = degree;
+  //touch_event_handler_->rotation = degree;
+  //text_input_channel->rotation = degree;
   if (degree == 90 || degree == 270) {
     SendWindowMetrics(height, width, 0.0);
   } else {

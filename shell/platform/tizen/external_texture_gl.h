@@ -6,7 +6,7 @@
 #define FLUTTER_SHELL_PLATFORM_TIZEN_EXTERNAL_TEXTURE_GL_H_
 
 #include <stdint.h>
-#include <tbm_bo.h>
+//#include <tbm_bo.h>
 #include <tbm_bufmgr.h>
 #include <tbm_drm_helper.h>
 #include <tbm_surface.h>

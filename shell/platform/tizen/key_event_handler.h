@@ -5,7 +5,8 @@
 #ifndef EMBEDDER_KEY_EVENT_HANDLER_H_
 #define EMBEDDER_KEY_EVENT_HANDLER_H_
 
-#include <Ecore_Input.h>
+//#include <Ecore_Input.h>
+#include <Ecore_Common.h>
 
 #include <vector>
 

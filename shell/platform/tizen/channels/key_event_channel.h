@@ -5,7 +5,7 @@
 #ifndef EMBEDDER_KEY_EVENT_CHANNEL_H_
 #define EMBEDDER_KEY_EVENT_CHANNEL_H_
 
-#include <Ecore_Input.h>
+//#include <Ecore_Input.h>
 
 #include "flutter/shell/platform/common/cpp/client_wrapper/include/flutter/basic_message_channel.h"
 #include "flutter/shell/platform/common/cpp/client_wrapper/include/flutter/binary_messenger.h"
