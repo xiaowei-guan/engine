@@ -1,0 +1,34 @@
+// Copyright 2020 Samsung Electronics Co., Ltd. All rights reserved.
+// Copyright 2013 The Flutter Authors. All rights reserved.
+// Use of this source code is governed by a BSD-style license that can be
+// found in the LICENSE file.
+#ifndef EMBEDDER_TIZEN_RENDERER_ECORE_WL_H
+#define EMBEDDER_TIZEN_RENDERER_ECORE_WL_H
+
+#include "tizen_renderer.h"
+#include <wayland-client.h>
+#include <wayland-egl.h>
+#define EFL_BETA_API_SUPPORT
+#include <Ecore_Wayland.h>
+class TizenRendererEcoreWl : public TizenRenderer {
+ public:
+  TizenRendererEcoreWl(int32_t x, int32_t y, int32_t w, int32_t h);
+  ~TizenRendererEcoreWl();
+  void SetSize(int32_t width, int32_t height) override;
+  TizenRenderer::TizenWindowGeometry GetGeometry() override;
+  int GetEcoreWindowId() override;
+ protected:
+  bool SetupDisplay() override;
+  bool SetupEcoreWlWindow(int32_t x, int32_t y, int32_t w, int32_t h) override;
+  bool SetupEglWindow(int32_t w, int32_t h) override;
+  EGLDisplay GetEGLDisplay() override;
+  EGLNativeWindowType GetEGLNativeWindowType() override;
+  void DestoryEglWindow() override;
+  void DestoryEcoreWlWindow() override;
+  void ShutdownDisplay() override;
+  private:
+  Ecore_Wl_Window* ecore_wl_window_ = nullptr;
+  wl_egl_window* wl_egl_window_ = nullptr;
+  wl_display* wl_display_= nullptr;
+};
+#endif
