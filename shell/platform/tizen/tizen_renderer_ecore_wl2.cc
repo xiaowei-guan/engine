@@ -4,7 +4,7 @@
 // found in the LICENSE file.
 #include "tizen_renderer_ecore_wl2.h"
 
-#include "flutter/shell/platform/tizen/logger.h"
+#include "flutter/shell/platform/tizen/tizen_log.h"
 
 TizenRendererEcoreWl2::TizenRendererEcoreWl2(int32_t x, int32_t y, int32_t w,
                                              int32_t h) {
@@ -13,15 +13,15 @@ TizenRendererEcoreWl2::TizenRendererEcoreWl2(int32_t x, int32_t y, int32_t w,
 TizenRendererEcoreWl2::~TizenRendererEcoreWl2() { DestoryRenderer(); }
 bool TizenRendererEcoreWl2::SetupDisplay() {
   if (!ecore_wl2_init()) {
-    LoggerE("Could not initialize ecore_wl2");
+    FT_LOGE("Could not initialize ecore_wl2");
     return false;
   }
   ecore_wl2_display_ = ecore_wl2_display_connect(nullptr);
   if (ecore_wl2_display_ == nullptr) {
-    LoggerE("Disyplay not found");
+    FT_LOGE("Disyplay not found");
     return false;
   }
-  LoggerD("ecore_wl2_display_: %p", ecore_wl2_display_);
+  FT_LOGD("ecore_wl2_display_: %p", ecore_wl2_display_);
   ecore_wl2_sync();
   return true;
 }
@@ -29,7 +29,7 @@ bool TizenRendererEcoreWl2::SetupDisplay() {
 bool TizenRendererEcoreWl2::SetupEcoreWlWindow(int32_t x, int32_t y, int32_t w,
                                                int32_t h) {
   if (w == 0 || h == 0) {
-    LoggerE("Failed to create because of the wrong size");
+    FT_LOGE("Failed to create because of the wrong size");
   }
   ecore_wl2_window_ =
       ecore_wl2_window_new(ecore_wl2_display_, nullptr, x, y, w, h);
@@ -84,7 +84,7 @@ TizenRenderer::TizenWindowGeometry TizenRendererEcoreWl2::GetGeometry() {
 
 void TizenRendererEcoreWl2::SetSize(int32_t width, int32_t height) {
   // FIXME : I think we have to find another way.
-  LoggerD("Resize egl window %d %d", width, height);
+  FT_LOGD("Resize egl window %d %d", width, height);
   ecore_wl2_egl_window_resize_with_rotation(ecore_wl2_egl_window_, 0, 0, width,
                                             height, 0);
 }

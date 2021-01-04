@@ -295,9 +295,9 @@ TextInputChannel::TextInputChannel(flutter::BinaryMessenger* messenger,
   } else if (GetImfMethod() != nullptr) {
     imf_context_ = ecore_imf_context_add(GetImfMethod());
   }
-  if (imfContext_) {
+  if (imf_context_) {
     ecore_imf_context_client_window_set(
-        imfContext_, (void*)engine_->tizen_renderer->GetEcoreWindowId());
+        imf_context_, (void*)engine_->tizen_renderer->GetEcoreWindowId());
     RegisterIMFCallback();
   } else {
     FT_LOGE("Failed to create imfContext");

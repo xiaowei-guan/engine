@@ -7,63 +7,63 @@
 #include <GLES2/gl2.h>
 #include <GLES2/gl2ext.h>
 
-#include "flutter/shell/platform/tizen/logger.h"
+#include "flutter/shell/platform/tizen/tizen_log.h"
 
 TizenRenderer::~TizenRenderer() = default;
 
 bool TizenRenderer::OnMakeCurrent() {
   if (is_valid_) {
-    LoggerE("Invalid TizenRenderer");
+    FT_LOGE("Invalid TizenRenderer");
     return false;
   }
   if (eglMakeCurrent(egl_display_, egl_surface_, egl_surface_, egl_context_) !=
       EGL_TRUE) {
-    LoggerE("Could not make the onscreen context current");
+    FT_LOGE("Could not make the onscreen context current");
     return false;
   }
   return true;
 }
 bool TizenRenderer::OnClearCurrent() {
   if (is_valid_) {
-    LoggerE("Invalid TizenRenderer");
+    FT_LOGE("Invalid TizenRenderer");
     return false;
   }
   if (eglMakeCurrent(egl_display_, EGL_NO_SURFACE, EGL_NO_SURFACE,
                      EGL_NO_CONTEXT) != EGL_TRUE) {
-    LoggerE("Could not clear context");
+    FT_LOGE("Could not clear context");
     return false;
   }
   return true;
 }
 bool TizenRenderer::OnMakeResourceCurrent() {
   if (is_valid_) {
-    LoggerE("Invalid TizenRenderer");
+    FT_LOGE("Invalid TizenRenderer");
     return false;
   }
   if (eglMakeCurrent(egl_display_, egl_resource_surface_, egl_resource_surface_,
                      egl_resource_context_) != EGL_TRUE) {
-    LoggerE("Could not make the offscreen context current");
+    FT_LOGE("Could not make the offscreen context current");
     return false;
   }
   return true;
 }
 bool TizenRenderer::OnPresent() {
   if (is_valid_) {
-    LoggerE("Invalid TizenRenderer");
+    FT_LOGE("Invalid TizenRenderer");
     return false;
   }
   if (eglSwapBuffers(egl_display_, egl_surface_) != EGL_TRUE) {
-    LoggerE("Could not swap EGl buffer");
+    FT_LOGE("Could not swap EGl buffer");
     return false;
   }
   return true;
 }
 uint32_t TizenRenderer::OnGetFBO() {
   if (is_valid_) {
-    LoggerE("Invalid TizenRenderer");
+    FT_LOGE("Invalid TizenRenderer");
     return 999;
   }
-  LoggerD("OnGetFBO");
+  FT_LOGD("OnGetFBO");
   return 0;
 }
 
@@ -184,7 +184,7 @@ void* TizenRenderer::OnProcResolver(const char* name) {
   GL_FUNC(glVertexAttribPointer)
   GL_FUNC(glViewport)
 
-  LoggerW("Could not resolve: %s", name);
+  FT_LOGW("Could not resolve: %s", name);
   return nullptr;
 }
 #undef GL_FUNC
@@ -192,21 +192,21 @@ void* TizenRenderer::OnProcResolver(const char* name) {
 bool TizenRenderer::InitializeRenderer(int32_t x, int32_t y, int32_t w,
                                        int32_t h) {
   if (!SetupDisplay()) {
-    LoggerE("setupDisplay fail");
+    FT_LOGE("setupDisplay fail");
     return false;
   }
   if (!SetupEcoreWlWindow(x, y, w, h)) {
-    LoggerE("SetupEcoreWlWindow fail");
+    FT_LOGE("SetupEcoreWlWindow fail");
     return false;
   }
 
   if (!SetupEglWindow(w, h)) {
-    LoggerE("SetupEglWindow fail");
+    FT_LOGE("SetupEglWindow fail");
     return false;
   }
 
   if (!SetupEglSurface()) {
-    LoggerE("setupEglSurface fail");
+    FT_LOGE("setupEglSurface fail");
     return false;
   }
   is_valid_ = true;
@@ -217,7 +217,7 @@ bool TizenRenderer::IsValid() { return is_valid_; }
 
 bool TizenRenderer::SetupEglSurface() {
   if (!ChooseEGLConfiguration()) {
-    LoggerE("ChooseEGLConfiguration fail");
+    FT_LOGE("ChooseEGLConfiguration fail");
     return false;
   }
   const EGLint contextAttribs[] = {EGL_CONTEXT_CLIENT_VERSION, 2, EGL_NONE};
@@ -239,13 +239,13 @@ bool TizenRenderer::SetupEglSurface() {
   egl_surface_ = eglCreateWindowSurface(egl_display_, egl_config_,
                                         GetEGLNativeWindowType(), ptr);
   if (egl_surface_ == EGL_NO_SURFACE) {
-    LoggerE("eglCreateWindowSurface is Failed");
+    FT_LOGE("eglCreateWindowSurface is Failed");
     return false;
   }
   egl_resource_surface_ =
       eglCreatePbufferSurface(egl_display_, egl_config_, attribs);
   if (egl_resource_surface_ == EGL_NO_SURFACE) {
-    LoggerE("eglCreatePbufferSurface is Failed");
+    FT_LOGE("eglCreatePbufferSurface is Failed");
     return false;
   }
   return true;
@@ -276,12 +276,12 @@ bool TizenRenderer::ChooseEGLConfiguration() {
   int bufferSize = 32;
   egl_display_ = GetEGLDisplay();
   if (EGL_NO_DISPLAY == egl_display_) {
-    LoggerE("EGL Get Display is failed");
+    FT_LOGE("EGL Get Display is failed");
     return false;
   }
 
   if (!eglInitialize(egl_display_, &major, &minor)) {
-    LoggerE("EGL Intialize is Failed major [%d] minor [%d]", major, minor);
+    FT_LOGE("EGL Intialize is Failed major [%d] minor [%d]", major, minor);
     PrintEGLError();
     return false;
   }
@@ -294,7 +294,7 @@ bool TizenRenderer::ChooseEGLConfiguration() {
   EGLint numOfConfig = 0;
   // Query all framebuffer configurations
   if (!eglGetConfigs(egl_display_, NULL, 0, &numOfConfig)) {
-    LoggerE("eglGetConfigs is Failed!!");
+    FT_LOGE("eglGetConfigs is Failed!!");
     PrintEGLError();
     return false;
   }
@@ -326,28 +326,28 @@ void TizenRenderer::PrintEGLError() {
   EGLint error = eglGetError();
   switch (error) {
     case EGL_BAD_DISPLAY: {
-      LoggerE("EGL_BAD_DISPLAY : Display is not an EGL display connection\n");
+      FT_LOGE("EGL_BAD_DISPLAY : Display is not an EGL display connection\n");
       break;
     }
     case EGL_NOT_INITIALIZED: {
-      LoggerE("EGL_NOT_INITIALIZED : Display has not been initialized\n");
+      FT_LOGE("EGL_NOT_INITIALIZED : Display has not been initialized\n");
       break;
     }
     case EGL_BAD_SURFACE: {
-      LoggerE("EGL_BAD_SURFACE : Draw or read is not an EGL surface\n");
+      FT_LOGE("EGL_BAD_SURFACE : Draw or read is not an EGL surface\n");
       break;
     }
     case EGL_BAD_CONTEXT: {
-      LoggerE("EGL_BAD_CONTEXT : Context is not an EGL rendering context\n");
+      FT_LOGE("EGL_BAD_CONTEXT : Context is not an EGL rendering context\n");
       break;
     }
     case EGL_BAD_CONFIG: {
-      LoggerE(
+      FT_LOGE(
           "EGL_BAD_CONFIG : Config is not an EGL frame buffer configuration\n");
       break;
     }
     case EGL_BAD_MATCH: {
-      LoggerE(
+      FT_LOGE(
           "EGL_BAD_MATCH : Draw or read are not compatible with context, or if "
           "context is set to EGL_NO_CONTEXT and draw or read are not set to "
           "EGL_NO_SURFACE, or if draw or read are set to EGL_NO_SURFACE and "
@@ -355,54 +355,54 @@ void TizenRenderer::PrintEGLError() {
       break;
     }
     case EGL_BAD_ACCESS: {
-      LoggerE("EGL_BAD_ACCESS : Context is current to some other thread\n");
+      FT_LOGE("EGL_BAD_ACCESS : Context is current to some other thread\n");
       break;
     }
     case EGL_BAD_NATIVE_PIXMAP: {
-      LoggerE(
+      FT_LOGE(
           "EGL_BAD_NATIVE_PIXMAP : A native pixmap underlying either draw or "
           "read is no longer valid\n");
       break;
     }
     case EGL_BAD_NATIVE_WINDOW: {
-      LoggerE(
+      FT_LOGE(
           "EGL_BAD_NATIVE_WINDOW : A native window underlying either draw or "
           "read is no longer valid\n");
       break;
     }
     case EGL_BAD_CURRENT_SURFACE: {
-      LoggerE(
+      FT_LOGE(
           "EGL_BAD_CURRENT_SURFACE : The previous context has unflushed "
           "commands and the previous surface is no longer valid\n");
       break;
     }
     case EGL_BAD_ALLOC: {
-      LoggerE(
+      FT_LOGE(
           "EGL_BAD_ALLOC : Allocation of ancillary buffers for draw or read "
           "were delayed until eglMakeCurrent is called, and there are not "
           "enough resources to allocate them\n");
       break;
     }
     case EGL_CONTEXT_LOST: {
-      LoggerE(
+      FT_LOGE(
           "EGL_CONTEXT_LOST : If a power management event has occurred. The "
           "application must destroy all contexts and reinitialise OpenGL ES "
           "state and objects to continue rendering\n");
       break;
     }
     case EGL_BAD_PARAMETER: {
-      LoggerE("Invalid parameter is passed\n");
+      FT_LOGE("Invalid parameter is passed\n");
       break;
     }
     case EGL_BAD_ATTRIBUTE: {
-      LoggerE(
+      FT_LOGE(
           "The parameter configAttribs contains an invalid frame buffer "
           "configuration attribute or an attribute value that is unrecognized "
           "or out of range\n");
       break;
     }
     default: {
-      LoggerE("Unknown error with code: %d\n", error);
+      FT_LOGE("Unknown error with code: %d\n", error);
       break;
     }
   }
