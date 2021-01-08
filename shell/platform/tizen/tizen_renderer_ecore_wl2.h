@@ -18,15 +18,15 @@ class TizenRendererEcoreWl2 : public TizenRenderer {
   void SetSize(int32_t width, int32_t height) override;
 
  protected:
+  void DestoryEglWindow() override;
+  void DestoryEcoreWlWindow() override;
+  int GetEcoreWindowId() override;
+  EGLDisplay GetEGLDisplay() override;
+  EGLNativeWindowType GetEGLNativeWindowType() override;
   bool SetupDisplay() override;
   bool SetupEcoreWlWindow(int32_t x, int32_t y, int32_t w, int32_t h) override;
   bool SetupEglWindow(int32_t w, int32_t h) override;
-  EGLDisplay GetEGLDisplay() override;
-  EGLNativeWindowType GetEGLNativeWindowType() override;
-  void DestoryEglWindow() override;
-  void DestoryEcoreWlWindow() override;
   void ShutdownDisplay() override;
-  int GetEcoreWindowId() override;
 
  private:
   Ecore_Wl2_Display *ecore_wl2_display_ = nullptr;

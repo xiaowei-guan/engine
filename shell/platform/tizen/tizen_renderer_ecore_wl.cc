@@ -27,6 +27,10 @@ bool TizenRendererEcoreWl::SetupDisplay() {
 }
 bool TizenRendererEcoreWl::SetupEcoreWlWindow(int32_t x, int32_t y, int32_t w,
                                               int32_t h) {
+  if (w == 0 || h == 0) {
+    FT_LOGE("Failed to create because of the wrong size");
+    return false;
+  }
   ecore_wl_window_ = ecore_wl_window_new(
       nullptr, x, y, w, h, ECORE_WL_WINDOW_BUFFER_TYPE_EGL_WINDOW);
   FT_LOGD("ecore_wl_window_: %p", ecore_wl_window_);
@@ -35,9 +39,10 @@ bool TizenRendererEcoreWl::SetupEcoreWlWindow(int32_t x, int32_t y, int32_t w,
     return false;
   }
   ecore_wl_window_type_set(ecore_wl_window_, ECORE_WL_WINDOW_TYPE_TOPLEVEL);
-  ecore_wl_window_alpha_set(ecore_wl_window_, EINA_FALSE);
+  //ecore_wl_window_alpha_set(ecore_wl_window_, EINA_FALSE);
   ecore_wl_window_aux_hint_add(ecore_wl_window_, 0,
                                "wm.policy.win.user.geometry", "1");
+  ecore_wl_window_show(ecore_wl_window_);
   return true;
 }
 bool TizenRendererEcoreWl::SetupEglWindow(int32_t w, int32_t h) {

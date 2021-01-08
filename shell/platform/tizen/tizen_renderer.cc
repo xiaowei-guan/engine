@@ -12,54 +12,62 @@
 TizenRenderer::~TizenRenderer() = default;
 
 bool TizenRenderer::OnMakeCurrent() {
-  if (is_valid_) {
+  if (!IsValid()) {
     FT_LOGE("Invalid TizenRenderer");
     return false;
   }
   if (eglMakeCurrent(egl_display_, egl_surface_, egl_surface_, egl_context_) !=
       EGL_TRUE) {
     FT_LOGE("Could not make the onscreen context current");
+    PrintEGLError();
     return false;
   }
   return true;
 }
+
 bool TizenRenderer::OnClearCurrent() {
-  if (is_valid_) {
+  if (!IsValid()) {
     FT_LOGE("Invalid TizenRenderer");
     return false;
   }
   if (eglMakeCurrent(egl_display_, EGL_NO_SURFACE, EGL_NO_SURFACE,
                      EGL_NO_CONTEXT) != EGL_TRUE) {
     FT_LOGE("Could not clear context");
+    PrintEGLError();
     return false;
   }
   return true;
 }
+
 bool TizenRenderer::OnMakeResourceCurrent() {
-  if (is_valid_) {
+  if (!IsValid()) {
     FT_LOGE("Invalid TizenRenderer");
     return false;
   }
   if (eglMakeCurrent(egl_display_, egl_resource_surface_, egl_resource_surface_,
                      egl_resource_context_) != EGL_TRUE) {
     FT_LOGE("Could not make the offscreen context current");
+    PrintEGLError();
     return false;
   }
   return true;
 }
+
 bool TizenRenderer::OnPresent() {
-  if (is_valid_) {
+  if (!is_valid_) {
     FT_LOGE("Invalid TizenRenderer");
     return false;
   }
   if (eglSwapBuffers(egl_display_, egl_surface_) != EGL_TRUE) {
     FT_LOGE("Could not swap EGl buffer");
+    PrintEGLError();
     return false;
   }
   return true;
 }
+
 uint32_t TizenRenderer::OnGetFBO() {
-  if (is_valid_) {
+  if (!is_valid_) {
     FT_LOGE("Invalid TizenRenderer");
     return 999;
   }
