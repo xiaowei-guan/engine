@@ -9,66 +9,20 @@
 #include "flutter/shell/platform/tizen/tizen_embedder_engine.h"
 #include "flutter/shell/platform/tizen/tizen_log.h"
 
-static std::atomic<Ecore_Pipe*> g_vblank_ecore_pipe = nullptr;
-
-static const int VBLANK_LOOP_REQUEST = 1;
-static const int VBLANK_LOOP_DEL_PIPE = 2;
-
-static void SendVblankLoopRequest(int event_type) {
-  if (ecore_pipe_write(g_vblank_ecore_pipe.load(), &event_type,
-                       sizeof(event_type)) == EINA_FALSE) {
-    FT_LOGE("Failed to Send Reqeust [%s]", event_type == VBLANK_LOOP_REQUEST
-                                               ? "VBLANK_LOOP_REQUEST"
-                                               : "VBLANK_LOOP_DEL_PIPE");
-  }
+static void RequestVblank(void* data, Ecore_Thread* thread) {
+  TizenVsyncWaiter* tizen_vsync_waiter =
+      reinterpret_cast<TizenVsyncWaiter*>(data);
+  tizen_vsync_waiter->HandleVblankLoopRequest();
 }
 
 TizenVsyncWaiter::TizenVsyncWaiter(TizenEmbedderEngine* engine)
     : engine_(engine) {
   if (!CreateTDMVblank()) {
     FT_LOGE("Failed to create TDM vblank");
-    return;
-  }
-
-  std::thread t(
-      [this](void* data) {
-        if (!ecore_init()) {
-          FT_LOGE("Failed to init Ecore");
-          return;
-        }
-        Ecore_Pipe* vblank_ecore_pipe = ecore_pipe_add(
-            [](void* data, void* buffer, unsigned int nbyte) {
-              TizenVsyncWaiter* tizen_vsync_waiter =
-                  reinterpret_cast<TizenVsyncWaiter*>(data);
-              int event_type = *(reinterpret_cast<int*>(buffer));
-              if (event_type == VBLANK_LOOP_REQUEST) {
-                tizen_vsync_waiter->HandleVblankLoopRequest();
-              } else if (event_type == VBLANK_LOOP_DEL_PIPE) {
-                if (g_vblank_ecore_pipe.load()) {
-                  ecore_pipe_del(g_vblank_ecore_pipe);
-                  g_vblank_ecore_pipe = NULL;
-                }
-                ecore_main_loop_quit();
-              }
-            },
-            this);
-
-        g_vblank_ecore_pipe.store(vblank_ecore_pipe);
-        ecore_main_loop_begin();
-        ecore_shutdown();
-      },
-      nullptr);
-  t.join();
-
-  if (g_vblank_ecore_pipe.load() == nullptr) {
-    FT_LOGE("Failed to create Ecore Pipe");
   }
 }
 
 TizenVsyncWaiter::~TizenVsyncWaiter() {
-  if (g_vblank_ecore_pipe.load()) {
-    SendVblankLoopRequest(VBLANK_LOOP_DEL_PIPE);
-  }
   if (vblank_) {
     tdm_client_vblank_destroy(vblank_);
   }
@@ -79,12 +33,7 @@ TizenVsyncWaiter::~TizenVsyncWaiter() {
 
 void TizenVsyncWaiter::AsyncWaitForVsync(intptr_t baton) {
   baton_ = baton;
-  SendVblankLoopRequest(VBLANK_LOOP_REQUEST);
-}
-
-bool TizenVsyncWaiter::IsValid() {
-  return g_vblank_ecore_pipe.load() && client_ && output_ && vblank_ &&
-         engine_ && engine_->flutter_engine;
+  ecore_thread_run(RequestVblank, NULL, NULL, this);
 }
 
 bool TizenVsyncWaiter::CreateTDMVblank() {
@@ -108,7 +57,6 @@ bool TizenVsyncWaiter::CreateTDMVblank() {
   }
 
   tdm_client_vblank_set_enable_fake(vblank_, 1);
-
   return true;
 }
 

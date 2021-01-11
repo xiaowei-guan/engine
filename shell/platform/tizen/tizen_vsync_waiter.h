@@ -7,8 +7,6 @@
 
 #include <tdm_client.h>
 
-#include <thread>
-
 #include "flutter/shell/platform/embedder/embedder.h"
 
 class TizenEmbedderEngine;
@@ -18,12 +16,11 @@ class TizenVsyncWaiter {
   TizenVsyncWaiter(TizenEmbedderEngine* engine);
   virtual ~TizenVsyncWaiter();
   void AsyncWaitForVsync(intptr_t baton);
-
-  bool IsValid();
+  void HandleVblankLoopRequest();
 
  private:
   bool CreateTDMVblank();
-  void HandleVblankLoopRequest();
+
   static void TdmClientVblankCallback(tdm_client_vblank* vblank,
                                       tdm_error error, unsigned int sequence,
                                       unsigned int tv_sec, unsigned int tv_usec,

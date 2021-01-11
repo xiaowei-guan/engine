@@ -36,13 +36,14 @@ TizenEmbedderEngine::TizenEmbedderEngine(
     const FlutterWindowProperties& window_properties)
     : device_profile(GetDeviceProfile()), device_dpi(GetDeviceDpi()) {
 #ifdef FLUTTER_TIZEN_4
-  tizen_renderer = std::make_unique<TizenRendererEcoreWl>(window_properties.x, 
-  window_properties.y, window_properties.width, window_properties.height);
+  tizen_renderer = std::make_unique<TizenRendererEcoreWl>(
+      window_properties.x, window_properties.y, window_properties.width,
+      window_properties.height);
 #else
-  tizen_renderer = std::make_unique<TizenRendererEcoreWl2>(window_properties.x, 
-  window_properties.y, window_properties.width, window_properties.height);
+  tizen_renderer = std::make_unique<TizenRendererEcoreWl2>(
+      window_properties.x, window_properties.y, window_properties.width,
+      window_properties.height);
 #endif
-
 
   // Run flutter task on Tizen main loop.
   // Tizen engine has four threads (GPU thread, UI thread, IO thread, platform
@@ -331,11 +332,7 @@ void TizenEmbedderEngine::OnFlutterPlatformMessage(
 void TizenEmbedderEngine::OnVsyncCallback(void* user_data, intptr_t baton) {
   TizenEmbedderEngine* tizen_embedder_engine =
       reinterpret_cast<TizenEmbedderEngine*>(user_data);
-  if (tizen_embedder_engine->tizen_vsync_waiter_->IsValid()) {
-    tizen_embedder_engine->tizen_vsync_waiter_->AsyncWaitForVsync(baton);
-    return;
-  }
-  FT_ASSERT_NOT_REACHED();
+  tizen_embedder_engine->tizen_vsync_waiter_->AsyncWaitForVsync(baton);
 }
 
 // Converts a FlutterPlatformMessage to an equivalent FlutterDesktopMessage.
