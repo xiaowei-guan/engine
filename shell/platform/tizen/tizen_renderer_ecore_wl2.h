@@ -2,6 +2,7 @@
 // Copyright 2013 The Flutter Authors. All rights reserved.
 // Use of this source code is governed by a BSD-style license that can be
 // found in the LICENSE file.
+
 #ifndef EMBEDDER_TIZEN_RENDERER_ECORE_WL2_H
 #define EMBEDDER_TIZEN_RENDERER_ECORE_WL2_H
 
@@ -16,11 +17,11 @@ class TizenRendererEcoreWl2 : public TizenRenderer {
   ~TizenRendererEcoreWl2();
   TizenWindowGeometry GetGeometry() override;
   void SetSize(int32_t width, int32_t height) override;
+  int GetEcoreWindowId() override;
 
  protected:
   void DestoryEglWindow() override;
   void DestoryEcoreWlWindow() override;
-  int GetEcoreWindowId() override;
   EGLDisplay GetEGLDisplay() override;
   EGLNativeWindowType GetEGLNativeWindowType() override;
   bool SetupDisplay() override;
