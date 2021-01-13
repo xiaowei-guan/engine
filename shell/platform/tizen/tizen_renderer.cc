@@ -1,5 +1,4 @@
 // Copyright 2020 Samsung Electronics Co., Ltd. All rights reserved.
-// Copyright 2013 The Flutter Authors. All rights reserved.
 // Use of this source code is governed by a BSD-style license that can be
 // found in the LICENSE file.
 
@@ -248,7 +247,7 @@ bool TizenRenderer::SetupEglSurface() {
   egl_surface_ = eglCreateWindowSurface(egl_display_, egl_config_,
                                         GetEGLNativeWindowType(), ptr);
   if (egl_surface_ == EGL_NO_SURFACE) {
-    FT_LOGE("eglCreateWindowSurface is Failed");
+    FT_LOGE("eglCreateWindowSurface failed");
     return false;
   }
   egl_resource_surface_ =
@@ -262,23 +261,16 @@ bool TizenRenderer::SetupEglSurface() {
 
 bool TizenRenderer::ChooseEGLConfiguration() {
   // egl CONTEXT
-  EGLint configAttribs[] = {EGL_SURFACE_TYPE,
-                            EGL_WINDOW_BIT,
-                            EGL_RED_SIZE,
-                            8,
-                            EGL_GREEN_SIZE,
-                            8,
-                            EGL_BLUE_SIZE,
-                            8,
-                            EGL_ALPHA_SIZE,
-                            EGL_DONT_CARE,
-                            EGL_RENDERABLE_TYPE,
-                            EGL_OPENGL_ES2_BIT,
-                            EGL_SAMPLE_BUFFERS,
-                            EGL_DONT_CARE,
-                            EGL_SAMPLES,
-                            EGL_DONT_CARE,
-                            EGL_NONE};
+  EGLint configAttribs[] = {
+    EGL_SURFACE_TYPE,    EGL_WINDOW_BIT,
+    EGL_RED_SIZE,        8,
+    EGL_GREEN_SIZE,      8,
+    EGL_BLUE_SIZE,       8,
+    EGL_ALPHA_SIZE,      EGL_DONT_CARE,
+    EGL_RENDERABLE_TYPE, EGL_OPENGL_ES2_BIT,
+    EGL_SAMPLE_BUFFERS,  EGL_DONT_CARE,
+    EGL_SAMPLES,         EGL_DONT_CARE,
+    EGL_NONE};
 
   EGLint major = 0;
   EGLint minor = 0;
@@ -335,24 +327,24 @@ void TizenRenderer::PrintEGLError() {
   EGLint error = eglGetError();
   switch (error) {
     case EGL_BAD_DISPLAY: {
-      FT_LOGE("EGL_BAD_DISPLAY : Display is not an EGL display connection\n");
+      FT_LOGE("EGL_BAD_DISPLAY : Display is not an EGL display connection");
       break;
     }
     case EGL_NOT_INITIALIZED: {
-      FT_LOGE("EGL_NOT_INITIALIZED : Display has not been initialized\n");
+      FT_LOGE("EGL_NOT_INITIALIZED : Display has not been initialized");
       break;
     }
     case EGL_BAD_SURFACE: {
-      FT_LOGE("EGL_BAD_SURFACE : Draw or read is not an EGL surface\n");
+      FT_LOGE("EGL_BAD_SURFACE : Draw or read is not an EGL surface");
       break;
     }
     case EGL_BAD_CONTEXT: {
-      FT_LOGE("EGL_BAD_CONTEXT : Context is not an EGL rendering context\n");
+      FT_LOGE("EGL_BAD_CONTEXT : Context is not an EGL rendering context");
       break;
     }
     case EGL_BAD_CONFIG: {
       FT_LOGE(
-          "EGL_BAD_CONFIG : Config is not an EGL frame buffer configuration\n");
+          "EGL_BAD_CONFIG : Config is not an EGL frame buffer configuration");
       break;
     }
     case EGL_BAD_MATCH: {
@@ -364,54 +356,54 @@ void TizenRenderer::PrintEGLError() {
       break;
     }
     case EGL_BAD_ACCESS: {
-      FT_LOGE("EGL_BAD_ACCESS : Context is current to some other thread\n");
+      FT_LOGE("EGL_BAD_ACCESS : Context is current to some other thread");
       break;
     }
     case EGL_BAD_NATIVE_PIXMAP: {
       FT_LOGE(
           "EGL_BAD_NATIVE_PIXMAP : A native pixmap underlying either draw or "
-          "read is no longer valid\n");
+          "read is no longer valid");
       break;
     }
     case EGL_BAD_NATIVE_WINDOW: {
       FT_LOGE(
           "EGL_BAD_NATIVE_WINDOW : A native window underlying either draw or "
-          "read is no longer valid\n");
+          "read is no longer valid");
       break;
     }
     case EGL_BAD_CURRENT_SURFACE: {
       FT_LOGE(
           "EGL_BAD_CURRENT_SURFACE : The previous context has unflushed "
-          "commands and the previous surface is no longer valid\n");
+          "commands and the previous surface is no longer valid");
       break;
     }
     case EGL_BAD_ALLOC: {
       FT_LOGE(
           "EGL_BAD_ALLOC : Allocation of ancillary buffers for draw or read "
           "were delayed until eglMakeCurrent is called, and there are not "
-          "enough resources to allocate them\n");
+          "enough resources to allocate them");
       break;
     }
     case EGL_CONTEXT_LOST: {
       FT_LOGE(
-          "EGL_CONTEXT_LOST : If a power management event has occurred. The "
+          "EGL_CONTEXT_LOST : A power management event has occurred. The "
           "application must destroy all contexts and reinitialise OpenGL ES "
-          "state and objects to continue rendering\n");
+          "state and objects to continue rendering");
       break;
     }
     case EGL_BAD_PARAMETER: {
-      FT_LOGE("Invalid parameter is passed\n");
+      FT_LOGE("Invalid parameter is passed");
       break;
     }
     case EGL_BAD_ATTRIBUTE: {
       FT_LOGE(
           "The parameter configAttribs contains an invalid frame buffer "
           "configuration attribute or an attribute value that is unrecognized "
-          "or out of range\n");
+          "or out of range");
       break;
     }
     default: {
-      FT_LOGE("Unknown error with code: %d\n", error);
+      FT_LOGE("Unknown error with code: %d", error);
       break;
     }
   }

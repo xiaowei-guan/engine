@@ -107,13 +107,13 @@ source_set("flutter_tizen") {
     "wayland-client",
   ]
 
-  if(tizen_sdk_4){
-    sources += ["tizen_renderer_ecore_wl.cc",]
-    libs += ["ecore_wayland", "wayland-egl"]
+  if (tizen_sdk_4) {
+    sources += [ "tizen_renderer_ecore_wl.cc" ]
+    libs += [ "ecore_wayland", "wayland-egl" ]
     defines = [ "FLUTTER_TIZEN_4" ]
-  }else {
-    sources += ["tizen_renderer_ecore_wl2.cc",]
-    libs += ["ecore_wl2"]
+  } else {
+    sources += [ "tizen_renderer_ecore_wl2.cc" ]
+    libs += [ "ecore_wl2" ]
   }
 }
 
