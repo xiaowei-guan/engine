@@ -5,8 +5,8 @@
 #ifndef EMBEDDER_TIZEN_VSYNC_WAITER_H_
 #define EMBEDDER_TIZEN_VSYNC_WAITER_H_
 
+#include <Ecore.h>
 #include <tdm_client.h>
-
 #include "flutter/shell/platform/embedder/embedder.h"
 
 class TizenEmbedderEngine;
@@ -16,16 +16,16 @@ class TizenVsyncWaiter {
   TizenVsyncWaiter(TizenEmbedderEngine* engine);
   virtual ~TizenVsyncWaiter();
   void AsyncWaitForVsync(intptr_t baton);
-  void HandleVblankLoopRequest();
 
  private:
   bool CreateTDMVblank();
-
+  void DestoryTDMVblank();
+  bool TDMValid();
   static void TdmClientVblankCallback(tdm_client_vblank* vblank,
                                       tdm_error error, unsigned int sequence,
                                       unsigned int tv_sec, unsigned int tv_usec,
                                       void* user_data);
-
+  static void RequestVblank(void* data, Ecore_Thread* thread);
   tdm_client* client_{nullptr};
   tdm_client_output* output_{nullptr};
   tdm_client_vblank* vblank_{nullptr};
