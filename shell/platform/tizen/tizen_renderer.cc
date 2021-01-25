@@ -9,6 +9,9 @@
 
 #include "flutter/shell/platform/tizen/tizen_log.h"
 
+TizenRenderer::TizenRenderer(TizenRenderer::Delegate& delegate)
+    : delegate_(delegate) {}
+
 TizenRenderer::~TizenRenderer() = default;
 
 bool TizenRenderer::OnMakeCurrent() {
@@ -58,6 +61,12 @@ bool TizenRenderer::OnPresent() {
     FT_LOGE("Invalid TizenRenderer");
     return false;
   }
+
+  if(window_data_.received_rotation) {
+    SendRotationChangeDone();
+    window_data_.received_rotation = false;
+  }
+
   if (eglSwapBuffers(egl_display_, egl_surface_) != EGL_TRUE) {
     FT_LOGE("Could not swap EGl buffer");
     PrintEGLError();
@@ -217,6 +226,7 @@ bool TizenRenderer::InitializeRenderer(int32_t x, int32_t y, int32_t w,
     FT_LOGE("setupEglSurface fail");
     return false;
   }
+  Show();
   is_valid_ = true;
   return true;
 }
@@ -444,4 +454,13 @@ void TizenRenderer::DestoryEglSurface() {
     eglTerminate(egl_display_);
     egl_display_ = EGL_NO_DISPLAY;
   }
+}
+
+TizenRenderer::TizenWindowGeometry TizenRenderer::GetWindowData(){
+    TizenWindowGeometry result;
+    result.x = window_data_.x;
+    result.y = window_data_.y;
+    result.w = window_data_.w;
+    result.h = window_data_.h;
+    return result;
 }
