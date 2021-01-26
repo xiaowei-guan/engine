@@ -7,15 +7,6 @@
 
 #include <EGL/egl.h>
 
-struct WindowData {
-  int32_t x{0};
-  int32_t y{0};
-  int32_t w{0};
-  int32_t h{0};
-  int rotation{0};
-  bool received_rotation{false};
-};
-
 class TizenRenderer {
  public:
   struct TizenWindowGeometry {
@@ -36,7 +27,6 @@ class TizenRenderer {
   uint32_t OnGetFBO();
   void* OnProcResolver(const char* name);
   virtual TizenWindowGeometry GetGeometry() = 0;
-  TizenWindowGeometry GetWindowData();
   bool IsValid();
   virtual void Show() = 0;
   virtual void SetRotate(int angle) = 0;
@@ -45,7 +35,7 @@ class TizenRenderer {
                                   int32_t height, int32_t degree) = 0;
 
  protected:
-  WindowData window_data_;
+  bool received_rotation{false};
   TizenRenderer::Delegate& delegate_;
   bool InitializeRenderer(int32_t x, int32_t y, int32_t w, int32_t h);
   virtual bool SetupDisplay() = 0;

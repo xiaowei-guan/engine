@@ -276,13 +276,9 @@ void TizenEmbedderEngine::SetWindowOrientation(int32_t degree) {
   tizen_renderer->SetRotate(degree);
   // Compute renderer transformation based on the angle of rotation.
   double rad = (360 - degree) * M_PI / 180;
-  auto geometry = tizen_renderer->GetWindowData();
+  auto geometry = tizen_renderer->GetGeometry();
   double width = geometry.w;
   double height = geometry.h;
-
-  if (text_input_channel->IsSoftwareKeyboardShowing()) {
-    height -= text_input_channel->GetCurrentKeyboardGeometry().h;
-  }
 
   double trans_x = 0.0, trans_y = 0.0;
   if (degree == 90) {

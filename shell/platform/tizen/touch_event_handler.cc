@@ -45,14 +45,14 @@ void TouchEventHandler::SendFlutterPointerEvent(FlutterPointerPhase phase,
   double new_x = x, new_y = y;
 
   if (rotation == 90) {
-    new_x = width - y;
+    new_x = height - y;
     new_y = x;
   } else if (rotation == 180) {
     new_x = width - x;
     new_y = height - y;
   } else if (rotation == 270) {
     new_x = y;
-    new_y = height - x;
+    new_y = width - x;
   }
 
   FlutterPointerEvent event = {};

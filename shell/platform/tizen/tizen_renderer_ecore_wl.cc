@@ -35,10 +35,7 @@ bool TizenRendererEcoreWl::SetupEcoreWlWindow(int32_t x, int32_t y, int32_t w,
     FT_LOGE("Failed to create because of the wrong size");
     return false;
   }
-  window_data_.x = x;
-  window_data_.y = y;
-  window_data_.w = w;
-  window_data_.h = h;
+
   ecore_wl_window_ = ecore_wl_window_new(
       nullptr, x, y, w, h, ECORE_WL_WINDOW_BUFFER_TYPE_EGL_WINDOW);
   FT_LOGD("ecore_wl_window_: %p", ecore_wl_window_);
@@ -70,14 +67,12 @@ Eina_Bool TizenRendererEcoreWl::RotationEventCb(void *data, int type,
 void TizenRendererEcoreWl::Show() { ecore_wl_window_show(ecore_wl_window_); }
 void TizenRendererEcoreWl::SetRotate(int degree) {
   ecore_wl_window_rotation_set(ecore_wl_window_, degree);
-  window_data_.received_rotation = true;
+  received_rotation = true;
 }
 
 void TizenRendererEcoreWl::ResizeWithRotation(int32_t x, int32_t y,
                                               int32_t width, int32_t height,
                                               int32_t degree) {
-  ecore_wl_window_resize(ecore_wl_window_, width, height, 0);
-  ecore_wl_window_update_size(ecore_wl_window_, width, height);
   wl_egl_window_set_buffer_transform(wl_egl_window_, degree / 90);
   wl_egl_window_set_window_transform(wl_egl_window_, degree / 90);
 
@@ -127,16 +122,8 @@ void TizenRendererEcoreWl::ShutdownDisplay() { ecore_wl_shutdown(); }
 
 TizenRenderer::TizenWindowGeometry TizenRendererEcoreWl::GetGeometry() {
   TizenWindowGeometry result;
-  int rotation = ecore_wl_window_rotation_get(ecore_wl_window_);
-  result.x = window_data_.x;
-  result.y = window_data_.y;
-  if (rotation == 90 || rotation == 270) {
-    result.w = window_data_.h;
-    result.h = window_data_.w;
-  } else {
-    result.w = window_data_.w;
-    result.h = window_data_.h;
-  }
+  ecore_wl_window_geometry_get(ecore_wl_window_, &result.x, &result.y,
+                               &result.w, &result.h);
   return result;
 }
 
