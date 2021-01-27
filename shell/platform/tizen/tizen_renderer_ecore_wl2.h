@@ -39,4 +39,4 @@ class TizenRendererEcoreWl2 : public TizenRenderer {
   Ecore_Wl2_Egl_Window *ecore_wl2_egl_window_ = nullptr;
   static Eina_Bool RotationEventCb(void *data, int type, void *event);
 };
-#endif
+#endif //EMBEDDER_TIZEN_RENDERER_ECORE_WL2_H

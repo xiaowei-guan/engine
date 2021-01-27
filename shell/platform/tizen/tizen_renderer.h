@@ -63,4 +63,4 @@ class TizenRenderer {
   bool ChooseEGLConfiguration();
   void PrintEGLError();
 };
-#endif
+#endif //EMBEDDER_TIZEN_RENDERER_H

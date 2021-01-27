@@ -40,4 +40,4 @@ class TizenRendererEcoreWl : public TizenRenderer {
   wl_display* wl_display_ = nullptr;
   static Eina_Bool RotationEventCb(void* data, int type, void* event);
 };
-#endif
+#endif //EMBEDDER_TIZEN_RENDERER_ECORE_WL_H
