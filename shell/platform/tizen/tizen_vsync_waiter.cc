@@ -77,7 +77,7 @@ void TizenVsyncWaiter::RequestVblankLoop(void* data, Ecore_Thread* thread) {
       FT_LOGE("Message is null");
       continue;
     }
-    if (msg->value == -1) {
+    if (msg->value == QUEUE_QUIT) {
       FT_LOGD("Message queue quit");
       return;
     }
