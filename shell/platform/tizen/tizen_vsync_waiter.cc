@@ -98,7 +98,10 @@ void TizenVsyncWaiter::RequestVblankLoop(void* data, Ecore_Thread* thread) {
 
 void TizenVsyncWaiter::VblankLoopFinish(void* data, Ecore_Thread* thread) {
   FT_LOGD("VblankLoopFinish!!!!!!");
-  eina_thread_queue_free(vblankThreadQueue);
+  if (vblankThreadQueue) {
+    eina_thread_queue_free(vblankThreadQueue);
+    vblankThreadQueue = nullptr;
+  }
 }
 
 bool TizenVsyncWaiter::CreateTDMVblank() {
