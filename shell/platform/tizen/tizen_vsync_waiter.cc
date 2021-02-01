@@ -89,7 +89,6 @@ void TizenVsyncWaiter::RequestVblankLoop(void* data, Ecore_Thread* thread) {
                                              TdmClientVblankCallback, data);
     if (error != TDM_ERROR_NONE) {
       FT_LOGE("tdm_client_vblank_wait error  %d", error);
-      tizen_vsync_waiter->SendMessage(QUEUE_REQUEST_VBLANK);
       continue;
     }
     tdm_client_handle_events(tizen_vsync_waiter->client_);
