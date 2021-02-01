@@ -34,7 +34,7 @@ class TizenVsyncWaiter {
   tdm_client_vblank* vblank_{nullptr};
   TizenEmbedderEngine* engine_{nullptr};
   intptr_t baton_{0};
-  Ecore_Thread* vblankThread_{nullptr};
+  Ecore_Thread* vblank_thread_{nullptr};
 };
 
 #endif  // EMBEDDER_TIZEN_VSYNC_WAITER_H_
