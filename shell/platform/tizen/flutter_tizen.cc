@@ -215,3 +215,28 @@ void FlutterRegisterViewFactory(
       std::pair<std::string, std::unique_ptr<PlatformViewFactory>>(
           view_type, std::move(view_factory)));
 }
+
+FlutterDesktopTextureRegistrarRef FlutterDesktopRegistrarGetTextureRegistrar(
+    FlutterDesktopPluginRegistrarRef registrar) {
+  FT_LOGE("Tizen DesktopTexture support is not implemented yet.");
+  return nullptr;
+}
+
+int64_t FlutterDesktopTextureRegistrarRegisterExternalTexture(
+    FlutterDesktopTextureRegistrarRef texture_registrar,
+    const FlutterDesktopTextureInfo* texture_info) {
+  FT_LOGE("Tizen DesktopTexture support is not implemented yet.");
+  return -1;
+}
+
+bool FlutterDesktopTextureRegistrarUnregisterExternalTexture(
+    FlutterDesktopTextureRegistrarRef texture_registrar, int64_t texture_id) {
+  FT_LOGE("Tizen DesktopTexture support is not implemented yet.");
+  return false;
+}
+
+bool FlutterDesktopTextureRegistrarMarkExternalTextureFrameAvailable(
+    FlutterDesktopTextureRegistrarRef texture_registrar, int64_t texture_id) {
+  FT_LOGE("Tizen DesktopTexture support is not implemented yet.");
+  return false;
+}
